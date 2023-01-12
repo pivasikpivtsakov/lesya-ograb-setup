@@ -1,13 +1,25 @@
 <template>
+  <b-container fluid class="pt-1 pb-2">
+
+  </b-container>
+
   <b-container fluid>
     <b-row>
       <b-col>
         <b-list-group>
           <b-list-group-item>
-            <b-button variant="outline-primary">
+            <b-button variant="outline-primary" @click="addNewTokenShowClick">
               <icon-add/>
               add new
             </b-button>
+          </b-list-group-item>
+          <b-list-group-item v-if="tokenAddVisible">
+              <b-form-input v-model="newTokenData.owner" type="text" placeholder="owner" class="my-1"/>
+              <b-form-input v-model="newTokenData.token" type="text" placeholder="token" class="my-1"/>
+              <b-button variant="outline-success" @click="addNewTokenClick">
+                <icon-add/>
+                add new
+              </b-button>
           </b-list-group-item>
           <b-list-group-item v-for="item of tokenReprs"
                              class="d-flex justify-content-between">
@@ -16,7 +28,7 @@
               <span class="flex-grow-1">{{ item.owner }}</span>
             </div>
             <div class="d-flex">
-              <b-button variant="outline-danger">
+              <b-button variant="outline-danger" @click="deleteTokenClick(item)">
                 <icon-delete/>
               </b-button>
             </div>
@@ -29,6 +41,7 @@
 
 <script>
 
+import _ from 'lodash'
 import IconDelete from '@/components/icons/IconDelete.vue'
 import IconAdd from '@/components/icons/IconAdd.vue'
 
@@ -37,23 +50,39 @@ export default {
   data() {
     return {
       tokenReprs: [],
+      tokenAddVisible: false,
+      newTokenData: {
+        owner: '',
+        token: '',
+      }
     }
   },
   methods: {
     async getTokensList() {
-      try {
-        const tokenReprs = await this.axios.get('vk-tokens/safe/')
-        console.log(tokenReprs)
-        return tokenReprs.data
-      } catch (e) {
-        alert('не могу достучаться до сервера')
-        console.error(e)
-      }
+      const tokenReprs = await this.axios.get('vk-tokens/safe/')
+      return tokenReprs.data
     },
+    async addNewTokenShowClick() {
+      this.tokenAddVisible = !this.tokenAddVisible
+    },
+    async addNewTokenClick() {
+      this.tokenAddVisible = !this.tokenAddVisible
+      const dto = this.newTokenData
+      await this.axios.put('vk-tokens/', {data: dto})
+      await this.updateTokenList()
+    },
+    async deleteTokenClick(item) {
+      const dto = {owner: item.owner}
+      await this.axios.delete('vk-tokens/', {data: dto})
+      await this.updateTokenList()
+    },
+    async updateTokenList() {
+      const {tokenReprs} = await this.getTokensList()
+      this.tokenReprs = tokenReprs
+    }
   },
   async mounted() {
-    const {tokenReprs} = await this.getTokensList()
-    this.tokenReprs = tokenReprs
+    await this.updateTokenList()
   },
 }
 

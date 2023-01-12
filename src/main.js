@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import VueAxios from 'vue-axios'
-import {Axios} from 'axios'
+import axios from 'axios'
 
 import App from './App.vue'
 
@@ -10,7 +10,11 @@ import './assets/main.css'
 
 
 const baseBackendUrl = import.meta.env['VITE_BACKEND_URL']
-const axiosInstance = new Axios({baseURL: baseBackendUrl, transformResponse: data => JSON.parse(data)})
+const axiosInstance = axios.create({baseURL: baseBackendUrl})
+axiosInstance.interceptors.request.use(null, error => {
+    alert('не могу достучаться до сервера')
+    console.error(error)
+})
 
 const app = createApp(App)
 app.config.unwrapInjectedRef = true
