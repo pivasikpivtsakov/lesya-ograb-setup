@@ -68,7 +68,7 @@ export default {
     async addNewTokenClick() {
       this.tokenAddVisible = !this.tokenAddVisible
       const dto = this.newTokenData
-      await this.axios.put('vk-tokens/', {data: dto})
+      await this.axios.put('vk-tokens/', dto)
       await this.updateTokenList()
     },
     async deleteTokenClick(item) {
