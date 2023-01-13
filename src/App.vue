@@ -9,7 +9,7 @@
         <b-list-group>
           <b-list-group-item>
             <b-button variant="outline-primary" @click="addNewTokenShowClick">
-              <icon-add/>
+              <i-mdi-add/>
               add new
             </b-button>
           </b-list-group-item>
@@ -17,7 +17,7 @@
               <b-form-input v-model="newTokenData.owner" type="text" placeholder="owner" class="my-1"/>
               <b-form-input v-model="newTokenData.token" type="text" placeholder="token" class="my-1"/>
               <b-button variant="outline-success" @click="addNewTokenClick">
-                <icon-add/>
+                <i-mdi-add/>
                 add new
               </b-button>
           </b-list-group-item>
@@ -29,7 +29,7 @@
             </div>
             <div class="d-flex">
               <b-button variant="outline-danger" @click="deleteTokenClick(item)">
-                <icon-delete/>
+                <i-mdi-delete-outline/>
               </b-button>
             </div>
           </b-list-group-item>
@@ -42,11 +42,8 @@
 <script>
 
 import _ from 'lodash'
-import IconDelete from '@/components/icons/IconDelete.vue'
-import IconAdd from '@/components/icons/IconAdd.vue'
 
 export default {
-  components: {IconAdd, IconDelete},
   data() {
     return {
       tokenReprs: [],
